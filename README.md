@@ -45,7 +45,7 @@ The following environment variables are required:
 ### Run the binary
 
 ```console
-$ sudo ./power-report
+$ ./power-report
 ```
 
 ## Creating a New Release
