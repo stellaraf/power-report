@@ -10,6 +10,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
+// CreateEmailBody creates an email body with a table of the summary data.
 func CreateEmailBody(date string, sum map[string]LocationData) (b string) {
 	style := `<style>
 table {
@@ -54,26 +55,32 @@ table, th, td {
 	return b
 }
 
+// SendEmail sends an email with summary data in the body and detail data attached.
 func SendEmail(sum map[string]LocationData, detail map[string][]DataPoint, f string) {
 	now := time.Now()
 	date := fmt.Sprintf("%s %02d, %d", now.Month(), now.Day(), now.Year())
+
 	b := CreateEmailBody(date, sum)
+
 	m := gomail.NewMessage()
 	m.SetHeader("From", emailFrom)
 	m.SetHeader("To", emailTo...)
 	m.SetHeader("Subject", fmt.Sprintf("Data Center Power Utilization - %s", date))
 	m.SetBody("text/html", b)
 	m.Attach(f)
+
 	port, err := strconv.Atoi(emailPort)
 	if err != nil {
 		panic(err)
 	}
+
 	dialer := gomail.Dialer{Host: emailHost, Port: port}
 
 	err = dialer.DialAndSend(m)
 	if err != nil {
 		panic(err)
 	}
+
 	for _, r := range emailTo {
 		log.Printf("Sent email to %s\n", r)
 	}

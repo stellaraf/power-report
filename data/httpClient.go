@@ -31,6 +31,7 @@ func createClient() *http.Client {
 	return client
 }
 
+// Perform an HTTP GET request and return the body as a string.
 func request(u string, p ...string) (b string, e error) {
 	// Ensure the base URL has a trailing slash.
 	if string(u[len(u)-1:]) != "/" {
